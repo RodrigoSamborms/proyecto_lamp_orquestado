@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api-web
+spec:
+  replicas: 2 # ¡Aquí ya empezamos a escalar!
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+      - name: api-container
+        image: tu-usuario/tu-api-php:v1 # Necesitarás subir tu imagen a un registro
+        ports:
+        - containerPort: 80
+        env:
+        - name: MYSQL_USER
+          value: "admin"
+        - name: MYSQL_PASSWORD
+          value: "1234"
+        - name: MYSQL_DATABASE
+          value: "proyecto_lamp"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api-service
+spec:
+  type: ClusterIP # Solo visible dentro del clúster
+  selector:
+    app: api
+  ports:
+    port: 80

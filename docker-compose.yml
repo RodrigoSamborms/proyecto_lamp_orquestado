@@ -1,0 +1,67 @@
+services:
+  # --- BASE DE DATOS ---
+  db:
+    image: mariadb:latest
+    container_name: db_faseB
+    environment:
+      MYSQL_ROOT_PASSWORD: Megamanzero
+      MYSQL_DATABASE: proyecto_lamp
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: "1234"
+    volumes:
+      - db_data_faseB:/var/lib/mysql
+      - ./db-init:/docker-entrypoint-initdb.d
+
+  # --- MICROSERVICIO API (Lógica y Datos) ---
+  api_php:
+    image: php:8.2-fpm
+    container_name: api_php
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: "1234"
+      MYSQL_DATABASE: proyecto_lamp
+    volumes:
+      - ./api:/var/www/html
+    command: >
+      sh -c "docker-php-ext-install mysqli && php-fpm"
+    depends_on:
+      - db
+
+  api_web:
+    image: nginx:alpine
+    container_name: api_server
+    ports:
+      - "8081:80" # Puerto para la API
+    volumes:
+      - ./api:/var/www/html
+      - ./nginx-api.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - api_php
+
+  # --- MICROSERVICIO WEB (Frontend) ---
+  web_php:
+    image: php:8.2-fpm
+    container_name: web_php
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: "1234"
+      MYSQL_DATABASE: proyecto_lamp
+    volumes:
+      - ./web:/var/www/html
+    command: >
+      sh -c "docker-php-ext-install mysqli && php-fpm"
+
+  web_srv:
+    image: nginx:alpine
+    container_name: web_server
+    ports:
+      - "8080:80" # Puerto para el usuario final
+    volumes:
+      - ./web:/var/www/html
+      - ./nginx-web.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web_php
+      - api_web
+
+volumes:
+  db_data_faseB:
