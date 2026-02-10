@@ -1,11 +1,6 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-apache
 
-# Actualizar repositorios e instalar dependencias de sistema primero
-RUN apk update && apk add --no-cache \
-    $PHPIZE_DEPS \
-    mysql-client
-
-# Instalar extensiones (aunque sea front, index.php usa curl y mysqli si fuera necesario)
+# Instalar extensiones necesarias para el frontend PHP
 RUN docker-php-ext-install mysqli
 
 # Copiar el código del frontend al contenedor

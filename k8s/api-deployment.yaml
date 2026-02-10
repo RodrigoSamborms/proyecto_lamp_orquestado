@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: api-container
-        image: tu-usuario/tu-api-php:v1 # Necesitarás subir tu imagen a un registro
+        image: mi-proyecto-api:v1
         ports:
         - containerPort: 80
         env:
@@ -34,4 +34,4 @@ spec:
   selector:
     app: api
   ports:
-    port: 80
+    - port: 80
