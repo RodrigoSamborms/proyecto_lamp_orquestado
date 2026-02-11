@@ -14,19 +14,34 @@ spec:
     spec:
       containers:
       - name: web-container
-        image: mi-proyecto-web:v1
+        image: mi-proyecto-web:v2
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /index.php
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /index.php
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          timeoutSeconds: 2
+          failureThreshold: 3
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: web-service
 spec:
-  type: NodePort # Esto nos permitirá entrar desde el navegador
+  type: LoadBalancer # Acceso via minikube tunnel
   selector:
     app: web
   ports:
     - port: 80
-      nodePort: 30080 # Puerto que usaremos en el navegador

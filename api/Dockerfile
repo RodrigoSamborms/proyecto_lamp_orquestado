@@ -1,9 +1,9 @@
-FROM php:8.2-fpm-alpine
+FROM php:8.2-apache
 
 # Actualizar repositorios e instalar dependencias de sistema primero
-RUN apk update && apk add --no-cache \
-    $PHPIZE_DEPS \
-    mysql-client
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    default-mysql-client \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones necesarias para MySQL
 RUN docker-php-ext-install mysqli

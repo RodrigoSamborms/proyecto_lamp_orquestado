@@ -1,12 +1,13 @@
 FROM php:8.2-apache
 
 # Actualizar repositorios e instalar dependencias de sistema primero
-RUN apk update && apk add --no-cache \
-    $PHPIZE_DEPS \
-    mysql-client
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    default-mysql-client \
+    libcurl4-openssl-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Instalar extensiones necesarias para el frontend PHP
-RUN docker-php-ext-install mysqli
+RUN docker-php-ext-install mysqli curl
 
 # Copiar el código del frontend al contenedor
 COPY . /var/www/html/

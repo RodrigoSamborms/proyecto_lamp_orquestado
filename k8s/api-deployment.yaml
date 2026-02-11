@@ -14,9 +14,25 @@ spec:
     spec:
       containers:
       - name: api-container
-        image: mi-proyecto-api:v1
+        image: mi-proyecto-api:v2
         ports:
         - containerPort: 80
+        readinessProbe:
+          httpGet:
+            path: /personas.php
+            port: 80
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          timeoutSeconds: 2
+          failureThreshold: 3
+        livenessProbe:
+          httpGet:
+            path: /personas.php
+            port: 80
+          initialDelaySeconds: 10
+          periodSeconds: 20
+          timeoutSeconds: 2
+          failureThreshold: 3
         env:
         - name: MYSQL_USER
           value: "admin"

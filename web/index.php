@@ -3,7 +3,7 @@
 // La comunicación es exclusivamente por HTTP.
 
 //$api_url = "http://[::1]/proyecto_lamp_desacoplado/src/faseA/api/personas.php";
-$api_url = "http://api_web/personas.php";
+$api_url = "http://api-service/personas.php";
 
 // Función para centralizar las peticiones cURL
 function consumir_api($url, $metodo, $datos = null) {

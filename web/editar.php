@@ -1,7 +1,7 @@
 <?php
 // web/editar.php
 //$api_url = "http://[::1]/proyecto_lamp_desacoplado/src/faseA/api/personas.php";
-$api_url = "http://api_web/personas.php";
+$api_url = "http://api-service/personas.php";
 
 // 1. Obtener los datos actuales para mostrar en el formulario
 if (isset($_GET['id'])) {
